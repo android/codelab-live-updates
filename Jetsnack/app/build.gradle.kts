@@ -122,6 +122,10 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
 
+    // For SnackOrderWidget
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)

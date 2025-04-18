@@ -76,5 +76,7 @@
     <string name="alphabetical">Alphabetical</string>
     <string name="close">Close</string>
     <string name="order_placed">\"Order placed using saved payment\"</string>
+    <string name="snack_order_widget_name">Jetsnack Recent Orders</string>
+    <string name="snack_order_widget_description">Quickly view and reorder your recent orders.</string>
 
 </resources>
