@@ -94,6 +94,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.glance.preview)
+    implementation(libs.androidx.appcompat)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -122,9 +124,10 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
 
-    // For SnackOrderWidget
+    // For RecentOrdersWidget
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.appcompat.resources)
 
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.core)
