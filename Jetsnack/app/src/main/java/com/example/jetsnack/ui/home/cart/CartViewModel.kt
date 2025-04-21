@@ -79,7 +79,7 @@ class CartViewModel(
                 orderString.append(",")
             }
         }
-        snackbarManager.showMessage(R.string.order_placed)
+        snackbarManager.checkoutSnacks()
     }
 
 

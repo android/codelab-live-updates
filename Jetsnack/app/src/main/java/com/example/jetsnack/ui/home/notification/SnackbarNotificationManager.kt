@@ -21,6 +21,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
 import android.os.Build
@@ -32,10 +34,12 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.IconCompat
 import com.example.jetsnack.R
+import com.example.jetsnack.ui.theme.JetsnackTheme
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -45,6 +49,7 @@ object SnackbarNotificationManager {
     const val CHANNEL_ID = "live_updates_channel_id"
     private const val CHANNEL_NAME = "live_updates_channel_name"
     private const val NOTIFICATION_ID = 1234
+
 
     fun initialize(context: Context, notifManager: NotificationManager) {
         notificationManager = notifManager
@@ -60,7 +65,7 @@ object SnackbarNotificationManager {
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle("You order is being placed")
                     .setContentText("Confirming with bakery...")
-                    .setStyle(buildBaseProgressStyle().setProgressIndeterminate(true))
+                    .setStyle(buildBaseProgressStyle(INITIALIZING).setProgressIndeterminate(true))
             }
         },
         FOOD_PREPARATION(12000) {
@@ -70,9 +75,8 @@ object SnackbarNotificationManager {
                     .setContentText("Next step will be delivery")
                     .setLargeIcon(
                         IconCompat.createWithResource(
-                            appContext, R.drawable.ic_launcher_foreground).toIcon(appContext))
-                    .setStyle(buildBaseProgressStyle()
-                        .setProgress(25))
+                            appContext, R.drawable.cupcake).toIcon(appContext))
+                    .setStyle(buildBaseProgressStyle(FOOD_PREPARATION).setProgress(25))
             }
         },
         FOOD_ENROUTE(18000) {
@@ -80,29 +84,29 @@ object SnackbarNotificationManager {
                 return buildBaseNotification(appContext)
                     .setContentTitle("Your order is on its way")
                     .setContentText("Enroute to destination")
-                    .setStyle(buildBaseProgressStyle()
+                    .setStyle(buildBaseProgressStyle(FOOD_ENROUTE)
                         .setProgressTrackerIcon(IconCompat.createWithResource(
-                            appContext, R.drawable.delivery_car).toIcon(appContext))
+                            appContext, R.drawable.shopping_bag).toIcon(appContext))
                         .setProgress(50)
                     )
                     .setLargeIcon(
                         IconCompat.createWithResource(
-                            appContext, R.drawable.delivery_car).toIcon(appContext))
+                            appContext, R.drawable.cupcake).toIcon(appContext))
             }
         },
         FOOD_ARRIVING(25000) {
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext)
-                    .setContentTitle("Your food is arriving and has been dropped off")
+                    .setContentTitle("Your order is arriving and has been dropped off")
                     .setContentText("Enjoy & don't forget to refrigerate any perishable items.")
-                    .setStyle(buildBaseProgressStyle()
+                    .setStyle(buildBaseProgressStyle(FOOD_ARRIVING)
                         .setProgressTrackerIcon(IconCompat.createWithResource(
-                            appContext, R.drawable.delivery_car).toIcon(appContext))
+                            appContext, R.drawable.delivery_truck).toIcon(appContext))
                         .setProgress(75)
                     )
                     .setLargeIcon(
                         IconCompat.createWithResource(
-                            appContext, R.drawable.delivery_car).toIcon(appContext))
+                            appContext, R.drawable.cupcake).toIcon(appContext))
             }
         },
         ORDER_COMPLETE(30000) {
@@ -110,35 +114,78 @@ object SnackbarNotificationManager {
                 return buildBaseNotification(appContext)
                     .setContentTitle("Your order is complete.")
                     .setContentText("Thank you for using JetSnack for your snacking needs.")
-                    .setStyle(buildBaseProgressStyle()
+                    .setStyle(buildBaseProgressStyle(ORDER_COMPLETE)
                         .setProgressTrackerIcon(IconCompat.createWithResource(
-                            appContext, R.drawable.ice_cream_sandwich).toIcon(appContext))
+                            appContext, R.drawable.check_circle).toIcon(appContext))
                         .setProgress(100)
                     )
                     .setLargeIcon(IconCompat.createWithResource(
-                        appContext, R.drawable.ice_cream_sandwich).toIcon(appContext))
+                        appContext, R.drawable.cupcake).toIcon(appContext))
             }
         };
+
+        fun isDarkModeActive(): Boolean {
+            return (appContext.resources.configuration.uiMode
+                    and Configuration.UI_MODE_NIGHT_MASK)== Configuration.UI_MODE_NIGHT_YES
+        }
 
         fun buildBaseNotification(appContext: Context): Notification.Builder {
             return Notification.Builder(appContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setColorized(true)
-                .setColor(Color.LightGray.toArgb())
+                .setColor(if (isDarkModeActive()) {
+                    Color(255, 248, 249, 1).toArgb()
+                } else {
+                    Color(22, 19, 20, 1).toArgb()
+                })
                 .setOngoing(true)
                 .setShowWhen(true)
         }
 
-        fun buildBaseProgressStyle(): ProgressStyle {
-            return ProgressStyle()
-                .setProgressTrackerIcon(
-                    Icon.createWithResource(appContext, R.drawable.ic_launcher_foreground))
-                .setProgressPoints(listOf(
-                    ProgressStyle.Point(25),
-                    ProgressStyle.Point(50),
-                    ProgressStyle.Point(75),
-                    ProgressStyle.Point(100)
-                    ))
+        fun buildBaseProgressStyle(orderState : OrderState): ProgressStyle {
+            val pointColor = Color(236,183, 255, 1).toArgb()
+            val segmentColor = Color(134,247,250,1).toArgb()
+            var progressStyle = ProgressStyle()
+                .setProgressPoints(
+                    listOf(
+                        ProgressStyle.Point(25).setColor(pointColor),
+                        ProgressStyle.Point(50).setColor(pointColor),
+                        ProgressStyle.Point(75).setColor(pointColor),
+                        ProgressStyle.Point(100).setColor(pointColor)
+                    )
+                ).setProgressSegments(
+                    listOf(
+                        ProgressStyle.Segment(25).setColor(segmentColor),
+                        ProgressStyle.Segment(25).setColor(segmentColor),
+                        ProgressStyle.Segment(25).setColor(segmentColor),
+                        ProgressStyle.Segment(25).setColor(segmentColor)
+
+                    )
+                )
+            when (orderState) {
+                INITIALIZING -> {}
+                FOOD_PREPARATION -> {}
+                FOOD_ENROUTE -> progressStyle.setProgressPoints(
+                    listOf(
+                        ProgressStyle.Point(25).setColor(pointColor)
+                    )
+                )
+                FOOD_ARRIVING -> progressStyle.setProgressPoints(
+                        listOf(
+                            ProgressStyle.Point(25).setColor(pointColor),
+                            ProgressStyle.Point(50).setColor(pointColor)
+                        )
+                )
+                ORDER_COMPLETE -> progressStyle.setProgressPoints(
+                        listOf(
+                            ProgressStyle.Point(25).setColor(pointColor),
+                            ProgressStyle.Point(50).setColor(pointColor),
+                            ProgressStyle.Point(75).setColor(pointColor),
+                            ProgressStyle.Point(100).setColor(pointColor)
+                        )
+                )
+            }
+            return progressStyle
         }
 
         fun CharSequence.foregroundColor(@ColorInt foregroundColor: Int): CharSequence {

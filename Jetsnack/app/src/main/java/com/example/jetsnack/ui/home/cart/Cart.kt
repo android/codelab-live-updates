@@ -509,7 +509,6 @@ private fun CheckoutBar(
                 onClick = {
                     // Kick-off checkout and live update or order status.
                     onCheckoutClick()
-                    SnackbarNotificationManager.start()
                 },
                 shape = RectangleShape,
                 modifier = Modifier
