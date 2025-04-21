@@ -16,7 +16,11 @@
 
 package com.example.jetsnack.model
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
+import com.example.jetsnack.R
+import com.example.jetsnack.ui.home.notification.SnackbarNotificationManager
 import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,5 +50,11 @@ object SnackbarManager {
         _messages.update { currentMessages ->
             currentMessages.filterNot { it.id == messageId }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.BAKLAVA)
+    fun checkoutSnacks() {
+        showMessage(R.string.order_placed)
+        SnackbarNotificationManager.start()
     }
 }
