@@ -61,7 +61,7 @@ object SnackbarNotificationManager {
     private enum class OrderState(val delay: Long) {
         INITIALIZING(5000) {
             override fun buildNotification(): Notification.Builder {
-                return buildBaseNotification(appContext)
+                return buildBaseNotification(appContext, INITIALIZING)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle("You order is being placed")
                     .setContentText("Confirming with bakery...")
@@ -70,7 +70,7 @@ object SnackbarNotificationManager {
         },
         FOOD_PREPARATION(12000) {
             override fun buildNotification(): Notification.Builder {
-                return buildBaseNotification(appContext)
+                return buildBaseNotification(appContext, FOOD_PREPARATION)
                     .setContentTitle("Your order is being prepared")
                     .setContentText("Next step will be delivery")
                     .setLargeIcon(
@@ -81,7 +81,7 @@ object SnackbarNotificationManager {
         },
         FOOD_ENROUTE(18000) {
             override fun buildNotification(): Notification.Builder {
-                return buildBaseNotification(appContext)
+                return buildBaseNotification(appContext, FOOD_ENROUTE)
                     .setContentTitle("Your order is on its way")
                     .setContentText("Enroute to destination")
                     .setStyle(buildBaseProgressStyle(FOOD_ENROUTE)
@@ -96,7 +96,7 @@ object SnackbarNotificationManager {
         },
         FOOD_ARRIVING(25000) {
             override fun buildNotification(): Notification.Builder {
-                return buildBaseNotification(appContext)
+                return buildBaseNotification(appContext, FOOD_ARRIVING)
                     .setContentTitle("Your order is arriving and has been dropped off")
                     .setContentText("Enjoy & don't forget to refrigerate any perishable items.")
                     .setStyle(buildBaseProgressStyle(FOOD_ARRIVING)
@@ -111,7 +111,7 @@ object SnackbarNotificationManager {
         },
         ORDER_COMPLETE(30000) {
             override fun buildNotification(): Notification.Builder {
-                return buildBaseNotification(appContext)
+                return buildBaseNotification(appContext, ORDER_COMPLETE)
                     .setContentTitle("Your order is complete.")
                     .setContentText("Thank you for using JetSnack for your snacking needs.")
                     .setStyle(buildBaseProgressStyle(ORDER_COMPLETE)
@@ -129,8 +129,8 @@ object SnackbarNotificationManager {
                     and Configuration.UI_MODE_NIGHT_MASK)== Configuration.UI_MODE_NIGHT_YES
         }
 
-        fun buildBaseNotification(appContext: Context): Notification.Builder {
-            return Notification.Builder(appContext, CHANNEL_ID)
+        fun buildBaseNotification(appContext: Context, orderState: OrderState): Notification.Builder {
+            var notificationBuilder = Notification.Builder(appContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setColorized(true)
                 .setColor(if (isDarkModeActive()) {
@@ -140,6 +140,27 @@ object SnackbarNotificationManager {
                 })
                 .setOngoing(true)
                 .setShowWhen(true)
+
+            when (orderState) {
+                INITIALIZING -> {}
+                FOOD_PREPARATION -> {}
+                FOOD_ENROUTE -> {}
+                FOOD_ARRIVING ->
+                    notificationBuilder
+                        .addAction(
+                            Notification.Action.Builder(null, "Got it", null).build()
+                        )
+                        .addAction(
+                            Notification.Action.Builder(null, "Tip", null).build()
+                        )
+                ORDER_COMPLETE ->
+                    notificationBuilder
+                        .addAction(
+                            Notification.Action.Builder(
+                                null, "Rate delivery", null).build()
+                        )
+            }
+            return notificationBuilder
         }
 
         fun buildBaseProgressStyle(orderState : OrderState): ProgressStyle {
