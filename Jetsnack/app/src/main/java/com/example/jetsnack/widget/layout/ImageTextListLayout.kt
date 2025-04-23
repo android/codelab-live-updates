@@ -81,7 +81,7 @@ fun ImageTextListLayout(
   @DrawableRes titleIconRes: Int,
   @DrawableRes titleBarActionIconRes: Int,
   titleBarActionIconContentDescription: String,
-  titleBarAction: (() -> Unit),
+  titleBarAction: Action,
   items: List<ImageTextListItemData>,
 ) {
   val imageTextListLayoutSize = ImageTextListLayoutSize.fromLocalSize()
@@ -470,8 +470,8 @@ private fun ImageTextListLayoutPreview() {
     titleIconRes = R.drawable.logo,
     titleBarActionIconRes = R.drawable.refresh,
     titleBarActionIconContentDescription = context.getString(
-      R.string.refresh_icon_button_label
+      R.string.shopping_cart_button_label
     ),
-    titleBarAction = {},
+    titleBarAction = actionStartDemoActivity("Title bar action click"),
   )
 }

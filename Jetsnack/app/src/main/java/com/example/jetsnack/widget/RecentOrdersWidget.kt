@@ -1,27 +1,30 @@
 package com.example.jetsnack.widget
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.core.net.toUri
 import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
 import androidx.glance.LocalSize
+import androidx.glance.action.Action
 import androidx.glance.appwidget.AppWidgetId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import com.example.jetsnack.R
+import com.example.jetsnack.ui.MainActivity
 import com.example.jetsnack.widget.data.FakeImageTextListDataRepository
 import com.example.jetsnack.widget.data.FakeImageTextListDataRepository.Companion.getImageTextListDataRepo
 import com.example.jetsnack.widget.layout.ImageTextListItemData
 import com.example.jetsnack.widget.layout.ImageTextListLayout
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RecentOrdersWidget : GlanceAppWidget() {
@@ -40,18 +43,16 @@ class RecentOrdersWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 val items by repo.data().collectAsState(initial = initialItems)
-                val coroutineScope = rememberCoroutineScope()
 
                 key(LocalSize.current) {
                     WidgetContent(
                         items = items,
-                        refreshAction = {
-                            coroutineScope.launch {
-                                withContext(Dispatchers.IO) {
-                                    repo.refresh()
-                                }
-                            }
-                        }
+                        shoppingCartAction = actionStartActivity(
+                            Intent(context.applicationContext, MainActivity::class.java)
+                                .setAction(Intent.ACTION_VIEW)
+                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                .setData("https://jetsnack.example.com/home/cart".toUri()),
+                        ),
                     )
                 }
             }
@@ -61,7 +62,7 @@ class RecentOrdersWidget : GlanceAppWidget() {
     @Composable
     fun WidgetContent(
         items: List<ImageTextListItemData>,
-        refreshAction: () -> Unit,
+        shoppingCartAction: Action,
     ) {
         val context = LocalContext.current
 
@@ -69,11 +70,11 @@ class RecentOrdersWidget : GlanceAppWidget() {
             items = items,
             title = context.getString(R.string.widget_title),
             titleIconRes = R.drawable.logo,
-            titleBarActionIconRes = R.drawable.refresh,
+            titleBarActionIconRes = R.drawable.shopping_cart,
             titleBarActionIconContentDescription = context.getString(
-                R.string.refresh_icon_button_label
+                R.string.shopping_cart_button_label
             ),
-            titleBarAction = refreshAction,
+            titleBarAction = shoppingCartAction,
         )
     }
 }

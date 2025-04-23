@@ -75,29 +75,14 @@
     <string name="rating">Rating</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="close">Close</string>
+    <string name="order_placed">\"Order placed using saved payment\"</string>
 
     <!-- Recent Orders Widget -->
     <string name="widget_title">Recent Jetsnack orders</string>
-    <string name="refresh_icon_button_label">Refresh</string>
-
-    <string name="sample_long_text_app_widget_name">Long Text</string>
-    <string name="sample_text_with_image_app_widget_name">Text &amp; Image</string>
-    <string name="sample_text_and_image_app_widget_name">Text and Image</string>
-    <string name="sample_check_list_app_widget_name">Checklist</string>
-    <string name="sample_action_list_app_widget_name">Action List</string>
-    <string name="sample_image_grid_app_widget_name">Image Grid</string>
-    <string name="sample_expressive_toolbar_app_widget_name">Expressive Toolbar</string>
-    <string name="sample_toolbar_app_widget_name">Toolbar</string>
-    <string name="sample_search_toolbar_app_widget_name">Search Toolbar</string>
-    <string name="order_placed">Order placed using saved payment</string>
     <string name="snack_order_widget_name">Jetsnack Recent Orders</string>
     <string name="snack_order_widget_description">Quickly view and reorder your recent orders.</string>
-    <string name="sample_app_name">LayoutSamples</string>
-    <string name="sample_action_list_settings_label">Settings</string>
+    <string name="shopping_cart_button_label">View shopping cart</string>
     <string name="sample_no_data_text">No data</string>
     <string name="sample_add_button_text">Add</string>
-    <string name="sample_learn_more_button_text">Learn more</string>
-    <string name="sample_see_more_button_label">See more</string>
-    <string name="sample_search_button_label">Search</string>
 
 </resources>
