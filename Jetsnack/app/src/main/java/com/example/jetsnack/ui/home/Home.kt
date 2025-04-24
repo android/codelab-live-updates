@@ -134,7 +134,8 @@ fun NavGraphBuilder.composableWithCompositionLocal(
 
 fun NavGraphBuilder.addHomeGraph(
     onSnackSelected: (Long, String, NavBackStackEntry) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cartItemsFromWidget: String?
 ) {
     composable(HomeSections.FEED.route) { from ->
         Feed(
@@ -155,7 +156,8 @@ fun NavGraphBuilder.addHomeGraph(
         )
     ) { from ->
         Cart(
-            onSnackClick = { id, origin -> onSnackSelected(id, origin, from) },
+            cartItemsFromWidget,
+            onSnackClick = { id, origin -> onSnackSelected(id, origin, from)},
             modifier
         )
     }

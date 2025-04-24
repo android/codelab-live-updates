@@ -59,7 +59,7 @@ import com.example.jetsnack.ui.theme.JetsnackTheme
 
 @Preview
 @Composable
-fun JetsnackApp() {
+fun JetsnackApp(cartItemsFromWidget: String? = null) {
     JetsnackTheme {
         val jetsnackNavController = rememberJetsnackNavController()
         SharedTransitionLayout {
@@ -74,7 +74,8 @@ fun JetsnackApp() {
                         route = MainDestinations.HOME_ROUTE
                     ) { backStackEntry ->
                         MainContainer(
-                            onSnackSelected = jetsnackNavController::navigateToSnackDetail
+                            onSnackSelected = jetsnackNavController::navigateToSnackDetail,
+                            cartItemsFromWidget = cartItemsFromWidget
                         )
                     }
 
@@ -107,7 +108,8 @@ fun JetsnackApp() {
 @Composable
 fun MainContainer(
     modifier: Modifier = Modifier,
-    onSnackSelected: (Long, String, NavBackStackEntry) -> Unit
+    onSnackSelected: (Long, String, NavBackStackEntry) -> Unit,
+    cartItemsFromWidget: String?
 ) {
     val jetsnackScaffoldState = rememberJetsnackScaffoldState()
     val nestedNavController = rememberJetsnackNavController()
@@ -163,7 +165,8 @@ fun MainContainer(
                 onSnackSelected = onSnackSelected,
                 modifier = Modifier
                     .padding(padding)
-                    .consumeWindowInsets(padding)
+                    .consumeWindowInsets(padding),
+                cartItemsFromWidget = cartItemsFromWidget
             )
         }
     }

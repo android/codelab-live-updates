@@ -11,7 +11,6 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
 import androidx.glance.LocalSize
-import androidx.glance.action.Action
 import androidx.glance.appwidget.AppWidgetId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -47,12 +46,10 @@ class RecentOrdersWidget : GlanceAppWidget() {
                 key(LocalSize.current) {
                     WidgetContent(
                         items = items,
-                        shoppingCartAction = actionStartActivity(
-                            Intent(context.applicationContext, MainActivity::class.java)
-                                .setAction(Intent.ACTION_VIEW)
-                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                .setData("https://jetsnack.example.com/home/cart".toUri()),
-                        ),
+                        shoppingCartActionIntent = Intent(context.applicationContext, MainActivity::class.java)
+                            .setAction(Intent.ACTION_VIEW)
+                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .setData("https://jetsnack.example.com/home/cart".toUri())
                     )
                 }
             }
@@ -62,7 +59,7 @@ class RecentOrdersWidget : GlanceAppWidget() {
     @Composable
     fun WidgetContent(
         items: List<ImageTextListItemData>,
-        shoppingCartAction: Action,
+        shoppingCartActionIntent: Intent
     ) {
         val context = LocalContext.current
 
@@ -74,7 +71,8 @@ class RecentOrdersWidget : GlanceAppWidget() {
             titleBarActionIconContentDescription = context.getString(
                 R.string.shopping_cart_button_label
             ),
-            titleBarAction = shoppingCartAction,
+            titleBarAction = actionStartActivity(shoppingCartActionIntent),
+            shoppingCartActionIntent = shoppingCartActionIntent
         )
     }
 }

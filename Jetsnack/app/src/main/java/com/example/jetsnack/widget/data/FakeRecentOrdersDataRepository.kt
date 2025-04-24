@@ -3,12 +3,12 @@ package com.example.jetsnack.widget.data
 import androidx.annotation.DrawableRes
 import androidx.glance.GlanceId
 import com.example.jetsnack.R
+import com.example.jetsnack.model.Snack
+import com.example.jetsnack.model.snacks
 import com.example.jetsnack.widget.layout.ImageTextListItemData
 import com.example.jetsnack.widget.computeIfAbsent as computeIfAbsentExt
-import kotlin.random.Random
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.runBlocking
 
 /**
  * A fake in-memory implementation of repository that produces list of [ImageTextListItemData]
@@ -21,20 +21,6 @@ class FakeImageTextListDataRepository {
    * Flow of [ImageTextListItemData]s that can be listened to during a Glance session.
    */
   fun data(): Flow<List<ImageTextListItemData>> = data
-
-  /**
-   * Reloads items (which due to shuffling) helps mimic a refresh
-   */
-  fun refresh() {
-    val showData = Random.nextInt(50) < 5
-
-    items = if (showData) {
-        demoItems.take(MAX_ITEMS).shuffled()
-    } else {
-      listOf()
-    }
-    this.load()
-  }
 
   /**
    * Loads the list of [ImageTextListItemData]s.
@@ -53,7 +39,7 @@ class FakeImageTextListDataRepository {
     items: List<DemoDataItem>,
   ): List<ImageTextListItemData> {
 
-    val mappedItems = runBlocking {
+    val mappedItems =
       items.map { item ->
           return@map ImageTextListItemData(
               key = item.key,
@@ -61,22 +47,27 @@ class FakeImageTextListDataRepository {
               supportingText = item.supportingText,
               supportingImage = item.supportingImage,
               trailingIconButton = R.drawable.add_shopping_cart,
-              trailingIconButtonContentDescription = "Add to Shopping Cart"
+              trailingIconButtonContentDescription = "Add to Shopping Cart",
+              snackKeys = item.snackKeys
           )
-        }
-    }
+      }
 
     return mappedItems
   }
 
-  private data class DemoDataItem(
-    val key: String,
-    val title: String,
-    val supportingText: String,
-    @DrawableRes val supportingImage: Int,
-    @DrawableRes val trailingIconButton: Int? = null,
-    val trailingIconButtonContentDescription: String? = null,
-  )
+    /**
+     * snackKey: This app adds snacks to the cart based on where the [Snack] is positioned in a list
+     */
+  data class DemoDataItem(
+      val key: String,
+      val snackKeys: List<Int>,
+      val orderLine: List<Snack> = snackKeys.map { snacks[it] },
+      val title: String = orderLine[0].name,
+      val supportingText: String = orderLine.joinToString { it.name },
+      @DrawableRes val supportingImage: Int = orderLine[0].imageRes,
+      @DrawableRes val trailingIconButton: Int? = null,
+      val trailingIconButtonContentDescription: String? = null,
+    )
 
   companion object {
       private const val MAX_ITEMS = 10
@@ -84,33 +75,23 @@ class FakeImageTextListDataRepository {
       private val demoItems = listOf(
           DemoDataItem(
               key = "1",
-              title = "Cupcakes",
-              supportingText = "Cupcakes, almonds, bananas, apples",
-              supportingImage = R.drawable.cupcake
+              snackKeys = listOf(0, 20),
           ),
           DemoDataItem(
-              key = "1",
-              title = "Donut",
-              supportingText = "Donuts, milk, tea",
-              supportingImage = R.drawable.donut
+              key = "2",
+              snackKeys = listOf(1, 21),
           ),
           DemoDataItem(
-              key = "1",
-              title = "Eclair",
-              supportingText = "Eclairs, green tea, sugar",
-              supportingImage = R.drawable.eclair
+              key = "3",
+              snackKeys = listOf(2, 22),
           ),
           DemoDataItem(
-              key = "1",
-              title = "Froyo",
-              supportingText = "Froyo",
-              supportingImage = R.drawable.froyo
+              key = "4",
+              snackKeys = listOf(3, 23),
           ),
           DemoDataItem(
-              key = "1",
-              title = "Gingerbread",
-              supportingText = "Gingerbread",
-              supportingImage = R.drawable.gingerbread
+              key = "5",
+              snackKeys = listOf(4, 24),
           )
       )
 

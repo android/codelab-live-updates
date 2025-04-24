@@ -1,5 +1,6 @@
 package com.example.jetsnack.widget.layout
 
+import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
@@ -12,6 +13,7 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.Action
+import androidx.glance.action.action
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
@@ -42,6 +44,9 @@ import com.example.jetsnack.widget.utils.ActionUtils.actionStartDemoActivity
 import com.example.jetsnack.widget.utils.LargeWidgetPreview
 import com.example.jetsnack.widget.utils.MediumWidgetPreview
 import com.example.jetsnack.widget.utils.SmallWidgetPreview
+
+private val CART_ITEMS_KEY = "CART_ITEMS_KEY"
+
 
 /**
  * A layout focused on presenting a list of text with an image, and an optional icon button. The
@@ -83,6 +88,7 @@ fun ImageTextListLayout(
   titleBarActionIconContentDescription: String,
   titleBarAction: Action,
   items: List<ImageTextListItemData>,
+  shoppingCartActionIntent: Intent,
 ) {
   val imageTextListLayoutSize = ImageTextListLayoutSize.fromLocalSize()
 
@@ -122,12 +128,15 @@ fun ImageTextListLayout(
       null
     }
   ) {
-    Content(items)
+    Content(items, shoppingCartActionIntent)
   }
 }
 
 @Composable
-private fun Content(items: List<ImageTextListItemData>) {
+private fun Content(
+  items: List<ImageTextListItemData>,
+  shoppingCartActionIntent: Intent
+) {
   val displayTrailingIconIfPresent = shouldDisplayTrailingIconButton()
 
   if (items.isEmpty()) {
@@ -139,6 +148,7 @@ private fun Content(items: List<ImageTextListItemData>) {
           items = items,
           displayImage = false,
           displayTrailingIconIfPresent = displayTrailingIconIfPresent,
+          shoppingCartActionIntent = shoppingCartActionIntent
         )
       }
 
@@ -147,6 +157,7 @@ private fun Content(items: List<ImageTextListItemData>) {
           items = items,
           displayImage = true,
           displayTrailingIconIfPresent = displayTrailingIconIfPresent,
+          shoppingCartActionIntent = shoppingCartActionIntent
         )
       }
 
@@ -154,7 +165,8 @@ private fun Content(items: List<ImageTextListItemData>) {
         GridView(
           items = items,
           displayImage = true,
-          displayTrailingIconIfPresent = displayTrailingIconIfPresent
+          displayTrailingIconIfPresent = displayTrailingIconIfPresent,
+          shoppingCartActionIntent = shoppingCartActionIntent
         )
       }
     }
@@ -170,6 +182,7 @@ private fun ListView(
   items: List<ImageTextListItemData>,
   displayImage: Boolean,
   displayTrailingIconIfPresent: Boolean,
+  shoppingCartActionIntent: Intent,
 ) {
   RoundedScrollingLazyColumn(
     modifier = GlanceModifier.fillMaxSize(),
@@ -180,8 +193,8 @@ private fun ListView(
         item = item,
         displayImage = displayImage,
         displayTrailingIcon = displayTrailingIconIfPresent,
-        onClick = actionStartDemoActivity("Item ${item.key} click"),
         modifier = GlanceModifier.fillMaxSize(),
+        shoppingCartActionIntent = shoppingCartActionIntent
       )
     },
   )
@@ -197,6 +210,7 @@ private fun GridView(
   items: List<ImageTextListItemData>,
   displayImage: Boolean,
   displayTrailingIconIfPresent: Boolean,
+  shoppingCartActionIntent: Intent
 ) {
   RoundedScrollingLazyVerticalGrid(
     gridCells = NUM_GRID_CELLS,
@@ -207,8 +221,8 @@ private fun GridView(
         item = item,
         displayImage = displayImage,
         displayTrailingIcon = displayTrailingIconIfPresent,
-        onClick = actionStartDemoActivity("Item ${item.key} click"),
-        modifier = GlanceModifier.fillMaxSize()
+        modifier = GlanceModifier.fillMaxSize(),
+        shoppingCartActionIntent = shoppingCartActionIntent
       )
     },
     modifier = GlanceModifier.fillMaxSize()
@@ -224,8 +238,8 @@ private fun FilledHorizontalListItem(
   item: ImageTextListItemData,
   displayImage: Boolean,
   displayTrailingIcon: Boolean,
-  onClick: Action,
   modifier: GlanceModifier = GlanceModifier,
+  shoppingCartActionIntent: Intent,
 ) {
   @Composable
   fun TitleText() {
@@ -247,9 +261,8 @@ private fun FilledHorizontalListItem(
 
   @Composable
   fun SupportingImage() {
-    item.supportingImage?.let { ImageProvider(it) }?.let {
       Image(
-        provider = it,
+        provider = ImageProvider(item.supportingImage.toString().toInt()),
         // contentDescription is null because in this sample, it serves merely as a visual; but if
         // it gives additional info to user, you should set the appropriate content description.
         contentDescription = null,
@@ -258,18 +271,24 @@ private fun FilledHorizontalListItem(
         // Fixed size per UX spec
         modifier = modifier.cornerRadius(imageCornerRadius).size(Dimensions.imageSize)
       )
-    }
   }
 
   @Composable
   fun IconButton() {
+
+    val context = LocalContext.current
     if (item.trailingIconButton != null) {
       // Using CircleIconButton allows us to keep the touch target 48x48
       CircleIconButton(
         imageProvider = ImageProvider(item.trailingIconButton),
         backgroundColor = null, // to show transparent background.
         contentDescription = item.trailingIconButtonContentDescription,
-        onClick = actionStartDemoActivity("Item ${item.key} icon button click")
+        onClick = action {
+          context.startActivity(
+            shoppingCartActionIntent
+              .putExtra(CART_ITEMS_KEY, item.snackKeys.joinToString(separator = " "))
+          )
+        }
       )
     }
   }
@@ -281,7 +300,6 @@ private fun FilledHorizontalListItem(
       .background(GlanceTheme.colors.secondaryContainer),
     headlineContent = { TitleText() },
     supportingContent = { SupportingText() },
-    onClick = onClick,
     leadingContent = if (displayImage) {
       { SupportingImage() }
     } else {
@@ -315,6 +333,7 @@ data class ImageTextListItemData(
   @DrawableRes val supportingImage: Int? = null,
   @DrawableRes val trailingIconButton: Int? = null,
   val trailingIconButtonContentDescription: String? = null,
+  val snackKeys: List<Int>,
 )
 
 /**
@@ -446,26 +465,6 @@ private fun ImageTextListLayoutPreview() {
   val context = LocalContext.current
 
   ImageTextListLayout(
-    items = listOf(
-      ImageTextListItemData(
-        key = "1",
-        title = "Cupcakes",
-        supportingText = "Cupcakes, almonds, bananas, apples",
-        supportingImage = R.drawable.cupcake
-      ),
-      ImageTextListItemData(
-        key = "1",
-        title = "Donut",
-        supportingText = "Donuts, milk, tea",
-        supportingImage = R.drawable.donut
-      ),
-      ImageTextListItemData(
-        key = "1",
-        title = "Eclair",
-        supportingText = "Eclairs, green tea, sugar",
-        supportingImage = R.drawable.eclair
-      )
-    ),
     title = context.getString(R.string.widget_title),
     titleIconRes = R.drawable.logo,
     titleBarActionIconRes = R.drawable.refresh,
@@ -473,5 +472,38 @@ private fun ImageTextListLayoutPreview() {
       R.string.shopping_cart_button_label
     ),
     titleBarAction = actionStartDemoActivity("Title bar action click"),
+    items = listOf(
+      ImageTextListItemData(
+        key = "1",
+        snackKeys = listOf(0, 20),
+        supportingText = "Some text",
+        title = "Some title"
+      ),
+      ImageTextListItemData(
+        key = "1",
+        snackKeys = listOf(1, 21),
+        supportingText = "Some text",
+        title = "Some title"
+      ),
+      ImageTextListItemData(
+        key = "1",
+        snackKeys = listOf(2, 22),
+        supportingText = "Some text",
+        title = "Some title"
+      ),
+      ImageTextListItemData(
+        key = "1",
+        snackKeys = listOf(3, 23),
+        supportingText = "Some text",
+        title = "Some title"
+      ),
+      ImageTextListItemData(
+        key = "1",
+        snackKeys = listOf(4, 24),
+        supportingText = "Some text",
+        title = "Some title"
+      ),
+    ),
+    shoppingCartActionIntent = Intent()
   )
 }

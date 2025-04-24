@@ -50,19 +50,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -78,7 +73,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetsnack.R
@@ -102,12 +96,18 @@ import kotlin.math.roundToInt
 
 @Composable
 fun Cart(
+    cartItemsFromWidget: String?,
     onSnackClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory())
+    viewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory()),
 ) {
     val orderLines by viewModel.orderLines.collectAsStateWithLifecycle()
     val inspiredByCart = remember { SnackRepo.getInspiredByCart() }
+
+    if (cartItemsFromWidget != null) {
+        viewModel.reorderRecentOrder(cartItemsFromWidget.split(" ").map { it.toInt() })
+    }
+
     Cart(
         orderLines = orderLines,
         removeSnack = viewModel::removeSnack,
@@ -116,7 +116,7 @@ fun Cart(
         inspiredByCart = inspiredByCart,
         onCheckoutClick = viewModel::checkoutSnacks,
         onSnackClick = onSnackClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 

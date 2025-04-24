@@ -25,6 +25,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setContent { JetsnackApp() }
+
+        val cartItemsFromWidget = intent.getStringExtra("CART_ITEMS_KEY")
+
+        setContent { JetsnackApp(cartItemsFromWidget) }
     }
 }

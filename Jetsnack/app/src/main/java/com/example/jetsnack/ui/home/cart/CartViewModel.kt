@@ -22,6 +22,7 @@ import com.example.jetsnack.R
 import com.example.jetsnack.model.OrderLine
 import com.example.jetsnack.model.SnackRepo
 import com.example.jetsnack.model.SnackbarManager
+import com.example.jetsnack.model.snacks
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -42,6 +43,12 @@ class CartViewModel(
     // Logic to show errors every few requests
     private var requestCount = 0
     private fun shouldRandomlyFail(): Boolean = ++requestCount % 5 == 0
+
+    fun addSnack(snackId: Int) {
+        _orderLines.value = _orderLines.value.toMutableList().apply {
+            add(OrderLine(snacks[snackId], 1))
+        }
+    }
 
     fun increaseSnackCount(snackId: Long) {
         if (!shouldRandomlyFail()) {
@@ -82,10 +89,17 @@ class CartViewModel(
         snackbarManager.checkoutSnacks()
     }
 
-
+    private fun clearCart() {
+        _orderLines.value = emptyList()
+    }
 
     fun removeSnack(snackId: Long) {
         _orderLines.value = _orderLines.value.filter { it.snack.id != snackId }
+    }
+
+    fun reorderRecentOrder(cartItems : List<Int>){
+        clearCart()
+        cartItems.forEach { addSnack(it) }
     }
 
     private fun updateSnackCount(snackId: Long, count: Int) {
