@@ -13,7 +13,9 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.Action
-import androidx.glance.action.action
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionParametersOf
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
@@ -45,7 +47,7 @@ import com.example.jetsnack.widget.utils.LargeWidgetPreview
 import com.example.jetsnack.widget.utils.MediumWidgetPreview
 import com.example.jetsnack.widget.utils.SmallWidgetPreview
 
-private val CART_ITEMS_KEY = "CART_ITEMS_KEY"
+private val CART_ITEMS_KEY = ActionParameters.Key<String>("CART_ITEMS_KEY")
 
 
 /**
@@ -274,21 +276,17 @@ private fun FilledHorizontalListItem(
   }
 
   @Composable
-  fun IconButton() {
+  fun IconButton(intent: Intent = shoppingCartActionIntent.clone() as Intent) {
 
-    val context = LocalContext.current
     if (item.trailingIconButton != null) {
       // Using CircleIconButton allows us to keep the touch target 48x48
       CircleIconButton(
         imageProvider = ImageProvider(item.trailingIconButton),
         backgroundColor = null, // to show transparent background.
         contentDescription = item.trailingIconButtonContentDescription,
-        onClick = action {
-          context.startActivity(
-            shoppingCartActionIntent
-              .putExtra(CART_ITEMS_KEY, item.snackKeys.joinToString(separator = " "))
-          )
-        }
+        onClick = actionStartActivity(
+          intent,
+          actionParametersOf(CART_ITEMS_KEY to item.snackKeys.joinToString(separator = " ")))
       )
     }
   }
