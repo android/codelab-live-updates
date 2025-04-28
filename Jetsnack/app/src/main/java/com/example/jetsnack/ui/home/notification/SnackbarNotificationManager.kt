@@ -60,6 +60,7 @@ object SnackbarNotificationManager {
 
     private enum class OrderState(val delay: Long) {
         INITIALIZING(5000) {
+            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, INITIALIZING)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -69,6 +70,7 @@ object SnackbarNotificationManager {
             }
         },
         FOOD_PREPARATION(12000) {
+            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_PREPARATION)
                     .setContentTitle("Your order is being prepared")
@@ -80,6 +82,7 @@ object SnackbarNotificationManager {
             }
         },
         FOOD_ENROUTE(18000) {
+            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ENROUTE)
                     .setContentTitle("Your order is on its way")
@@ -95,6 +98,7 @@ object SnackbarNotificationManager {
             }
         },
         FOOD_ARRIVING(25000) {
+            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ARRIVING)
                     .setContentTitle("Your order is arriving and has been dropped off")
@@ -110,6 +114,7 @@ object SnackbarNotificationManager {
             }
         },
         ORDER_COMPLETE(30000) {
+            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, ORDER_COMPLETE)
                     .setContentTitle("Your order is complete.")
@@ -140,6 +145,7 @@ object SnackbarNotificationManager {
                 })
                 .setOngoing(true)
                 .setShowWhen(true)
+                .setWhen(System.currentTimeMillis().plus(11 * 60 * 1000 /* 10 min */))
 
             when (orderState) {
                 INITIALIZING -> {}
@@ -163,6 +169,7 @@ object SnackbarNotificationManager {
             return notificationBuilder
         }
 
+        @RequiresApi(Build.VERSION_CODES.BAKLAVA)
         fun buildBaseProgressStyle(orderState : OrderState): ProgressStyle {
             val pointColor = Color(236,183, 255, 1).toArgb()
             val segmentColor = Color(134,247,250,1).toArgb()
@@ -209,45 +216,25 @@ object SnackbarNotificationManager {
             return progressStyle
         }
 
-        fun CharSequence.foregroundColor(@ColorInt foregroundColor: Int): CharSequence {
-            val spannableString = SpannableString(this)
-            spannableString.setSpan(
-                ForegroundColorSpan(foregroundColor),
-                0,
-                spannableString.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
-            )
-            spannableString.setSpan(
-                StyleSpan(Typeface.BOLD),
-                0,
-                spannableString.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            return spannableString
-        }
         abstract fun buildNotification(): Notification.Builder
     }
 
     @RequiresApi(36)
     fun start() {
-        if (Build.VERSION.SDK_INT >= 35) {
-            Logger.getLogger("Logger").info("Called")
-            for (state in OrderState.entries) {
-                val notif = state.buildNotification().build()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    notificationManager.notify(NOTIFICATION_ID, notif)
-                    Logger.getLogger("canPostPromotedNotifications")
-                        .log(
-                            Level.INFO,
-                            notificationManager.canPostPromotedNotifications().toString())
-                    Logger.getLogger("hasPromotableCharacteristics")
-                        .log(
-                            Level.INFO,
-                            notif.hasPromotableCharacteristics().toString())
+        for (state in OrderState.entries) {
+            val notif = state.buildNotification().build()
+            Handler(Looper.getMainLooper()).postDelayed({
+                notificationManager.notify(NOTIFICATION_ID, notif)
+                Logger.getLogger("canPostPromotedNotifications")
+                    .log(
+                        Level.INFO,
+                        notificationManager.canPostPromotedNotifications().toString())
+                Logger.getLogger("hasPromotableCharacteristics")
+                    .log(
+                        Level.INFO,
+                        notif.hasPromotableCharacteristics().toString())
 
-                }, state.delay)
-            }
-
+            }, state.delay)
         }
 
     }

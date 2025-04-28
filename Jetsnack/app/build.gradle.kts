@@ -124,6 +124,8 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
 
+    implementation(libs.accompanist.permissions)
+
     // For RecentOrdersWidget
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
@@ -138,4 +140,5 @@ dependencies {
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.compose.ui.test)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+
 }

@@ -16,6 +16,7 @@
 
 package com.example.jetsnack.ui.home.cart
 
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -80,6 +81,7 @@ import com.example.jetsnack.model.OrderLine
 import com.example.jetsnack.model.SnackCollection
 import com.example.jetsnack.model.SnackRepo
 import com.example.jetsnack.ui.components.JetsnackButton
+import com.example.jetsnack.ui.components.JetsnackCard
 import com.example.jetsnack.ui.components.JetsnackDivider
 import com.example.jetsnack.ui.components.JetsnackSurface
 import com.example.jetsnack.ui.components.QuantitySelector
@@ -92,6 +94,10 @@ import com.example.jetsnack.ui.snackdetail.spatialExpressiveSpring
 import com.example.jetsnack.ui.theme.AlphaNearOpaque
 import com.example.jetsnack.ui.theme.JetsnackTheme
 import com.example.jetsnack.ui.utils.formatPrice
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlin.math.roundToInt
 
 @Composable
@@ -120,6 +126,7 @@ fun Cart(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.BAKLAVA)
 @Composable
 fun Cart(
     orderLines: List<OrderLine>,
@@ -504,6 +511,7 @@ private fun CheckoutBar(
     ) {
         JetsnackDivider()
         Row {
+            NotificationPermission()
             Spacer(Modifier.weight(1f))
             JetsnackButton(
                 onClick = {
@@ -526,6 +534,58 @@ private fun CheckoutBar(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun NotificationPermission() {
+    @SuppressLint("InlinedApi") // Granted at install time on API <33.
+    val notificationPermissionState = rememberPermissionState(
+        android.Manifest.permission.POST_NOTIFICATIONS,
+    )
+    if (!notificationPermissionState.status.isGranted) {
+        NotificationPermissionCard(
+            shouldShowRationale = notificationPermissionState.status.shouldShowRationale,
+            onGrantClick = {
+                notificationPermissionState.launchPermissionRequest()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun NotificationPermissionCard(
+    shouldShowRationale: Boolean,
+    onGrantClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    JetsnackCard(
+        modifier = modifier,
+    ) {
+        Text(
+            text = stringResource(R.string.permission_message),
+            modifier = Modifier.padding(16.dp),
+        )
+        if (shouldShowRationale) {
+            Text(
+                text = stringResource(R.string.permission_rationale),
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            contentAlignment = Alignment.BottomEnd,
+        ) {
+            JetsnackButton(onClick = onGrantClick) {
+                Text(text = stringResource(R.string.permission_grant))
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.BAKLAVA)
 @Preview("default")
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Preview("large font", fontScale = 2f)
