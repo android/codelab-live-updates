@@ -95,6 +95,7 @@ object SnackbarNotificationManager {
                     .setLargeIcon(
                         IconCompat.createWithResource(
                             appContext, R.drawable.cupcake).toIcon(appContext))
+                    .setWhen(System.currentTimeMillis().plus(11 * 60 * 1000 /* 10 min */))
             }
         },
         FOOD_ARRIVING(25000) {
@@ -111,6 +112,7 @@ object SnackbarNotificationManager {
                     .setLargeIcon(
                         IconCompat.createWithResource(
                             appContext, R.drawable.cupcake).toIcon(appContext))
+                    .setWhen(System.currentTimeMillis().plus(11 * 60 * 500 /* 5 min */))
             }
         },
         ORDER_COMPLETE(30000) {
@@ -144,8 +146,6 @@ object SnackbarNotificationManager {
                     Color(22, 19, 20, 1).toArgb()
                 })
                 .setOngoing(true)
-                .setShowWhen(true)
-                .setWhen(System.currentTimeMillis().plus(11 * 60 * 1000 /* 10 min */))
 
             when (orderState) {
                 INITIALIZING -> {}
