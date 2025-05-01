@@ -12,12 +12,11 @@
   the License.
   -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
     <path
-        android:fillColor="#fff"
-        android:fillType="evenOdd"
-        android:pathData="M70,36v36h-3.6L66.4,57.6L61,57.6L61,43.2c0,-3.168 4.032,-7.2 9,-7.2zM40.6,36v12.6h3.6L44.2,36h3.6v12.6h3.6L51.4,36L55,36v12.6c0,3.978 -3.222,7.2 -7.2,7.2L47.8,72h-3.6L44.2,55.8a7.198,7.198 0,0 1,-7.2 -7.2L37,36h3.6z" />
+        android:pathData="M12,0C18.627,0 24,5.373 24,12C24,18.627 18.627,24 12,24C5.373,24 0,18.627 0,12C0,5.373 5.373,0 12,0ZM6.9,10.3C6.9,11.552 7.915,12.566 9.167,12.566V17.667H10.3V12.566C11.552,12.566 12.566,11.552 12.566,10.3V6.333H11.434V10.3H10.3V6.333H9.167V10.3H8.033V6.333H6.9V10.3ZM17.1,6.333C15.536,6.333 14.267,7.602 14.267,8.6V13.134H15.967V17.667H17.1V6.333Z"
+        android:fillColor="#7D506C"/>
 </vector>

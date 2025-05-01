@@ -71,7 +71,7 @@ class RecentOrdersWidget : GlanceAppWidget() {
         ImageTextListLayout(
             items = items,
             title = context.getString(R.string.widget_title),
-            titleIconRes = R.drawable.logo,
+            titleIconRes = R.drawable.widget_logo,
             titleBarActionIconRes = R.drawable.shopping_cart,
             titleBarActionIconContentDescription = context.getString(
                 R.string.shopping_cart_button_label

@@ -464,7 +464,7 @@ private fun ImageTextListLayoutPreview() {
 
   ImageTextListLayout(
     title = context.getString(R.string.widget_title),
-    titleIconRes = R.drawable.logo,
+    titleIconRes = R.drawable.widget_logo,
     titleBarActionIconRes = R.drawable.refresh,
     titleBarActionIconContentDescription = context.getString(
       R.string.shopping_cart_button_label
