@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
@@ -14,6 +16,7 @@ import androidx.glance.LocalSize
 import androidx.glance.appwidget.AppWidgetId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.PreviewSizeMode
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
@@ -31,6 +34,8 @@ class RecentOrdersWidget : GlanceAppWidget() {
     // different sizes. And, unlike the "Responsive" mode, it doesn't cause several views for each
     // supported size to be held in the widget host's memory.
     override val sizeMode: SizeMode = SizeMode.Exact
+
+    override val previewSizeMode: PreviewSizeMode = SizeMode.Responsive(setOf(DpSize(450.dp, 200.dp)))
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = getImageTextListDataRepo(id)
@@ -75,6 +80,21 @@ class RecentOrdersWidget : GlanceAppWidget() {
             shoppingCartActionIntent = shoppingCartActionIntent
         )
     }
+
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        val repo = FakeImageTextListDataRepository()
+        val items = repo.load()
+
+        provideContent {
+            GlanceTheme {
+                WidgetContent(
+                    items = items,
+                    shoppingCartActionIntent = Intent()
+                )
+            }
+        }
+    }
+
 }
 
 class RecentOrdersWidgetReceiver : GlanceAppWidgetReceiver() {
