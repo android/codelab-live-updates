@@ -52,7 +52,6 @@ object SnackbarManager {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.BAKLAVA)
     fun checkoutSnacks() {
         showMessage(R.string.order_placed)
         SnackbarNotificationManager.start()

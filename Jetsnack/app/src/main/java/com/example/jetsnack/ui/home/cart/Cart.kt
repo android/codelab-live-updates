@@ -126,7 +126,6 @@ fun Cart(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.BAKLAVA)
 @Composable
 fun Cart(
     orderLines: List<OrderLine>,
@@ -495,7 +494,6 @@ fun SummaryItem(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.BAKLAVA)
 @Composable
 private fun CheckoutBar(
     onCheckoutClick: () -> Unit,
@@ -585,7 +583,6 @@ private fun NotificationPermissionCard(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.BAKLAVA)
 @Preview("default")
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Preview("large font", fontScale = 2f)

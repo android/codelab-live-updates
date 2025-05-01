@@ -16,32 +16,17 @@
 package com.example.jetsnack.ui.home.notification
 
 import android.app.Notification
-import android.app.Notification.ProgressStyle
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
 import android.content.res.Configuration
-import android.content.res.Resources
-import android.graphics.Typeface
-import android.graphics.drawable.Icon
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
-import androidx.annotation.ColorInt
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.IconCompat
 import com.example.jetsnack.R
-import com.example.jetsnack.ui.theme.JetsnackTheme
-import java.util.logging.Level
-import java.util.logging.Logger
 
 object SnackbarNotificationManager {
     private lateinit var notificationManager: NotificationManager
@@ -60,17 +45,14 @@ object SnackbarNotificationManager {
 
     private enum class OrderState(val delay: Long) {
         INITIALIZING(5000) {
-            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, INITIALIZING)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle("You order is being placed")
                     .setContentText("Confirming with bakery...")
-                    .setStyle(buildBaseProgressStyle(INITIALIZING).setProgressIndeterminate(true))
             }
         },
         FOOD_PREPARATION(12000) {
-            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_PREPARATION)
                     .setContentTitle("Your order is being prepared")
@@ -78,52 +60,33 @@ object SnackbarNotificationManager {
                     .setLargeIcon(
                         IconCompat.createWithResource(
                             appContext, R.drawable.cupcake).toIcon(appContext))
-                    .setStyle(buildBaseProgressStyle(FOOD_PREPARATION).setProgress(25))
             }
         },
         FOOD_ENROUTE(18000) {
-            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ENROUTE)
                     .setContentTitle("Your order is on its way")
                     .setContentText("Enroute to destination")
-                    .setStyle(buildBaseProgressStyle(FOOD_ENROUTE)
-                        .setProgressTrackerIcon(IconCompat.createWithResource(
-                            appContext, R.drawable.shopping_bag).toIcon(appContext))
-                        .setProgress(50)
-                    )
                     .setLargeIcon(
                         IconCompat.createWithResource(
                             appContext, R.drawable.cupcake).toIcon(appContext))
             }
         },
         FOOD_ARRIVING(25000) {
-            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ARRIVING)
                     .setContentTitle("Your order is arriving and has been dropped off")
                     .setContentText("Enjoy & don't forget to refrigerate any perishable items.")
-                    .setStyle(buildBaseProgressStyle(FOOD_ARRIVING)
-                        .setProgressTrackerIcon(IconCompat.createWithResource(
-                            appContext, R.drawable.delivery_truck).toIcon(appContext))
-                        .setProgress(75)
-                    )
                     .setLargeIcon(
                         IconCompat.createWithResource(
                             appContext, R.drawable.cupcake).toIcon(appContext))
             }
         },
         ORDER_COMPLETE(30000) {
-            @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, ORDER_COMPLETE)
                     .setContentTitle("Your order is complete.")
                     .setContentText("Thank you for using JetSnack for your snacking needs.")
-                    .setStyle(buildBaseProgressStyle(ORDER_COMPLETE)
-                        .setProgressTrackerIcon(IconCompat.createWithResource(
-                            appContext, R.drawable.check_circle).toIcon(appContext))
-                        .setProgress(100)
-                    )
                     .setLargeIcon(IconCompat.createWithResource(
                         appContext, R.drawable.cupcake).toIcon(appContext))
             }
@@ -137,7 +100,6 @@ object SnackbarNotificationManager {
         fun buildBaseNotification(appContext: Context, orderState: OrderState): Notification.Builder {
             var notificationBuilder = Notification.Builder(appContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setColorized(true)
                 .setColor(if (isDarkModeActive()) {
                     Color(255, 248, 249, 1).toArgb()
                 } else {
@@ -169,71 +131,14 @@ object SnackbarNotificationManager {
             return notificationBuilder
         }
 
-        @RequiresApi(Build.VERSION_CODES.BAKLAVA)
-        fun buildBaseProgressStyle(orderState : OrderState): ProgressStyle {
-            val pointColor = Color(236,183, 255, 1).toArgb()
-            val segmentColor = Color(134,247,250,1).toArgb()
-            var progressStyle = ProgressStyle()
-                .setProgressPoints(
-                    listOf(
-                        ProgressStyle.Point(25).setColor(pointColor),
-                        ProgressStyle.Point(50).setColor(pointColor),
-                        ProgressStyle.Point(75).setColor(pointColor),
-                        ProgressStyle.Point(100).setColor(pointColor)
-                    )
-                ).setProgressSegments(
-                    listOf(
-                        ProgressStyle.Segment(25).setColor(segmentColor),
-                        ProgressStyle.Segment(25).setColor(segmentColor),
-                        ProgressStyle.Segment(25).setColor(segmentColor),
-                        ProgressStyle.Segment(25).setColor(segmentColor)
-
-                    )
-                )
-            when (orderState) {
-                INITIALIZING -> {}
-                FOOD_PREPARATION -> {}
-                FOOD_ENROUTE -> progressStyle.setProgressPoints(
-                    listOf(
-                        ProgressStyle.Point(25).setColor(pointColor)
-                    )
-                )
-                FOOD_ARRIVING -> progressStyle.setProgressPoints(
-                        listOf(
-                            ProgressStyle.Point(25).setColor(pointColor),
-                            ProgressStyle.Point(50).setColor(pointColor)
-                        )
-                )
-                ORDER_COMPLETE -> progressStyle.setProgressPoints(
-                        listOf(
-                            ProgressStyle.Point(25).setColor(pointColor),
-                            ProgressStyle.Point(50).setColor(pointColor),
-                            ProgressStyle.Point(75).setColor(pointColor),
-                            ProgressStyle.Point(100).setColor(pointColor)
-                        )
-                )
-            }
-            return progressStyle
-        }
-
         abstract fun buildNotification(): Notification.Builder
     }
 
-    @RequiresApi(36)
     fun start() {
         for (state in OrderState.entries) {
             val notif = state.buildNotification().build()
             Handler(Looper.getMainLooper()).postDelayed({
                 notificationManager.notify(NOTIFICATION_ID, notif)
-                Logger.getLogger("canPostPromotedNotifications")
-                    .log(
-                        Level.INFO,
-                        notificationManager.canPostPromotedNotifications().toString())
-                Logger.getLogger("hasPromotableCharacteristics")
-                    .log(
-                        Level.INFO,
-                        notif.hasPromotableCharacteristics().toString())
-
             }, state.delay)
         }
 
