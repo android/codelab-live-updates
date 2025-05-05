@@ -106,8 +106,6 @@ object SnackbarNotificationManager {
                     Color(22, 19, 20, 1).toArgb()
                 })
                 .setOngoing(true)
-                .setShowWhen(true)
-                .setWhen(System.currentTimeMillis().plus(11 * 60 * 1000 /* 10 min */))
 
             when (orderState) {
                 INITIALIZING -> {}
