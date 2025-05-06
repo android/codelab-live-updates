@@ -80,7 +80,7 @@
     <string name="rating">Rating</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="close">Close</string>
-    <string name="order_placed">\"Order placed using saved payment\"</string>
+    <string name="order_placed">Order placed using saved payment</string>
 
     <!-- Recent Orders Widget -->
     <string name="widget_title">Recent Jetsnack orders</string>
