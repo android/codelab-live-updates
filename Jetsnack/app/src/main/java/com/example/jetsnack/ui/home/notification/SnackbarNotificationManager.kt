@@ -92,19 +92,9 @@ object SnackbarNotificationManager {
             }
         };
 
-        fun isDarkModeActive(): Boolean {
-            return (appContext.resources.configuration.uiMode
-                    and Configuration.UI_MODE_NIGHT_MASK)== Configuration.UI_MODE_NIGHT_YES
-        }
-
         fun buildBaseNotification(appContext: Context, orderState: OrderState): Notification.Builder {
             var notificationBuilder = Notification.Builder(appContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setColor(if (isDarkModeActive()) {
-                    Color(255, 248, 249, 1).toArgb()
-                } else {
-                    Color(22, 19, 20, 1).toArgb()
-                })
                 .setOngoing(true)
 
             when (orderState) {
