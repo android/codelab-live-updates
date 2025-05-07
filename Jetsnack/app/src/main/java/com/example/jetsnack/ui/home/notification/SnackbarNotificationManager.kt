@@ -140,11 +140,6 @@ object SnackbarNotificationManager {
             var notificationBuilder = Notification.Builder(appContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setColorized(true)
-                .setColor(if (isDarkModeActive()) {
-                    Color(255, 248, 249, 1).toArgb()
-                } else {
-                    Color(22, 19, 20, 1).toArgb()
-                })
                 .setOngoing(true)
 
             when (orderState) {
@@ -209,7 +204,6 @@ object SnackbarNotificationManager {
                             ProgressStyle.Point(25).setColor(pointColor),
                             ProgressStyle.Point(50).setColor(pointColor),
                             ProgressStyle.Point(75).setColor(pointColor),
-                            ProgressStyle.Point(100).setColor(pointColor)
                         )
                 )
             }
