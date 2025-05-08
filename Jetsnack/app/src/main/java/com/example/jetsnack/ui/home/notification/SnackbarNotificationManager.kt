@@ -20,11 +20,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.IconCompat
 import com.example.jetsnack.R
 
@@ -52,7 +49,7 @@ object SnackbarNotificationManager {
                     .setContentText("Confirming with bakery...")
             }
         },
-        FOOD_PREPARATION(12000) {
+        FOOD_PREPARATION(9000) {
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_PREPARATION)
                     .setContentTitle("Your order is being prepared")
@@ -62,7 +59,7 @@ object SnackbarNotificationManager {
                             appContext, R.drawable.cupcake).toIcon(appContext))
             }
         },
-        FOOD_ENROUTE(18000) {
+        FOOD_ENROUTE(13000) {
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ENROUTE)
                     .setContentTitle("Your order is on its way")
@@ -72,7 +69,7 @@ object SnackbarNotificationManager {
                             appContext, R.drawable.cupcake).toIcon(appContext))
             }
         },
-        FOOD_ARRIVING(25000) {
+        FOOD_ARRIVING(18000) {
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ARRIVING)
                     .setContentTitle("Your order is arriving and has been dropped off")
@@ -82,7 +79,7 @@ object SnackbarNotificationManager {
                             appContext, R.drawable.cupcake).toIcon(appContext))
             }
         },
-        ORDER_COMPLETE(30000) {
+        ORDER_COMPLETE(21000) {
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, ORDER_COMPLETE)
                     .setContentTitle("Your order is complete.")
