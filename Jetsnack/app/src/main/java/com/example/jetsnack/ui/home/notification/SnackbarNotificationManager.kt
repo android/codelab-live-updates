@@ -22,24 +22,14 @@ import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
 import android.content.res.Configuration
-import android.content.res.Resources
-import android.graphics.Typeface
-import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
-import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.IconCompat
 import com.example.jetsnack.R
-import com.example.jetsnack.ui.theme.JetsnackTheme
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -69,7 +59,7 @@ object SnackbarNotificationManager {
                     .setStyle(buildBaseProgressStyle(INITIALIZING).setProgressIndeterminate(true))
             }
         },
-        FOOD_PREPARATION(12000) {
+        FOOD_PREPARATION(9000) {
             @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_PREPARATION)
@@ -81,7 +71,7 @@ object SnackbarNotificationManager {
                     .setStyle(buildBaseProgressStyle(FOOD_PREPARATION).setProgress(25))
             }
         },
-        FOOD_ENROUTE(18000) {
+        FOOD_ENROUTE(13000) {
             @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ENROUTE)
@@ -98,7 +88,7 @@ object SnackbarNotificationManager {
                     .setWhen(System.currentTimeMillis().plus(11 * 60 * 1000 /* 10 min */))
             }
         },
-        FOOD_ARRIVING(25000) {
+        FOOD_ARRIVING(18000) {
             @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_ARRIVING)
@@ -115,7 +105,7 @@ object SnackbarNotificationManager {
                     .setWhen(System.currentTimeMillis().plus(11 * 60 * 500 /* 5 min */))
             }
         },
-        ORDER_COMPLETE(30000) {
+        ORDER_COMPLETE(21000) {
             @RequiresApi(Build.VERSION_CODES.BAKLAVA)
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, ORDER_COMPLETE)
