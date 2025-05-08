@@ -25,7 +25,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.glance.appwidget.GlanceAppWidgetManager
-import androidx.glance.appwidget.GlanceAppWidgetManager.Companion.SET_WIDGET_PREVIEWS_RESULT_SUCCESS
 import androidx.lifecycle.lifecycleScope
 import com.example.jetsnack.widget.RecentOrdersWidgetReceiver
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +57,7 @@ class MainActivity : ComponentActivity() {
         providerInfo?.generatedPreviewCategories.takeIf { it == 0 }?.let {
             // Set previews if this provider if unset
             val success = glanceAppWidgetManager.setWidgetPreviews(receiver)
-            val logMessage = if (success == SET_WIDGET_PREVIEWS_RESULT_SUCCESS) {
+            val logMessage = if (success) {
                 "set previews for ${receiver.simpleName}"
             } else {
                 "failed to set previews for ${receiver.simpleName}, rate-limited"
