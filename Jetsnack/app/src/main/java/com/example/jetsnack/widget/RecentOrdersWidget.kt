@@ -35,7 +35,12 @@ class RecentOrdersWidget : GlanceAppWidget() {
     // supported size to be held in the widget host's memory.
     override val sizeMode: SizeMode = SizeMode.Exact
 
-    override val previewSizeMode: PreviewSizeMode = SizeMode.Responsive(setOf(DpSize(450.dp, 200.dp)))
+    override val previewSizeMode = SizeMode.Responsive(
+        setOf(
+            DpSize(256.dp, 115.dp), // 4x2 cell min size
+            DpSize(260.dp, 180.dp), // Medium width layout, height with header
+        )
+    )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = getImageTextListDataRepo(id)

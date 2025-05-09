@@ -2,8 +2,13 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/snack_order_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
-    android:minWidth="40dp"
-    android:minHeight="40dp"
+    android:maxResizeHeight="@dimen/sample_text_with_image_list_widget_max_resize_height"
+    android:maxResizeWidth="@dimen/sample_text_with_image_list_widget_max_resize_width"
+    android:targetCellWidth="@integer/sample_text_with_image_list_target_cell_width"
+    android:targetCellHeight="@integer/sample_text_with_image_list_target_cell_height"
+    android:minHeight="@dimen/sample_text_with_image_list_widget_min_height"
+    android:minResizeHeight="@dimen/sample_text_with_image_list_widget_min_resize_height"
+    android:minResizeWidth="@dimen/sample_text_with_image_widget_list_min_resize_width"
+    android:minWidth="@dimen/sample_text_with_image_list_widget_min_width"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="86400000"
-    android:widgetCategory="home_screen" />
+    android:widgetCategory="home_screen|keyguard" />
