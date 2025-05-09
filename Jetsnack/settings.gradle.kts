@@ -25,17 +25,12 @@ pluginManagement {
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-
-    // TODO when Glance 1.2.0 alpha releases, revert this to the following:
-//    snapshotVersion?.let {
-//        println("https://androidx.dev/snapshots/builds/$it/artifacts/repository/")
-//        maven { url = uri("https://androidx.dev/snapshots/builds/$it/artifacts/repository/") }
-//        maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev/org/jetbrains/kotlin/kotlin-compose-compiler-plugin/2.0.0-RC2-200/") }
-//    }
-
     repositories {
-        maven { url = uri("https://androidx.dev/snapshots/latest/artifacts/repository/") }
-        maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev/org/jetbrains/kotlin/kotlin-compose-compiler-plugin/2.0.0-RC2-200/") }
+        snapshotVersion?.let {
+            println("https://androidx.dev/snapshots/builds/$it/artifacts/repository/")
+            maven { url = uri("https://androidx.dev/snapshots/builds/$it/artifacts/repository/") }
+            maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev/org/jetbrains/kotlin/kotlin-compose-compiler-plugin/2.0.0-RC2-200/") }
+        }
 
         google()
         mavenCentral()
