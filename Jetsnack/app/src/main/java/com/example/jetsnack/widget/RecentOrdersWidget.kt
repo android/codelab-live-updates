@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
@@ -31,6 +33,13 @@ class RecentOrdersWidget : GlanceAppWidget() {
     // different sizes. And, unlike the "Responsive" mode, it doesn't cause several views for each
     // supported size to be held in the widget host's memory.
     override val sizeMode: SizeMode = SizeMode.Exact
+
+    override val previewSizeMode = SizeMode.Responsive(
+        setOf(
+            DpSize(256.dp, 115.dp), // 4x2 cell min size
+            DpSize(260.dp, 180.dp), // Medium width layout, height with header
+        )
+    )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = getImageTextListDataRepo(id)
@@ -66,7 +75,7 @@ class RecentOrdersWidget : GlanceAppWidget() {
         ImageTextListLayout(
             items = items,
             title = context.getString(R.string.widget_title),
-            titleIconRes = R.drawable.logo,
+            titleIconRes = R.drawable.widget_logo,
             titleBarActionIconRes = R.drawable.shopping_cart,
             titleBarActionIconContentDescription = context.getString(
                 R.string.shopping_cart_button_label
@@ -75,6 +84,21 @@ class RecentOrdersWidget : GlanceAppWidget() {
             shoppingCartActionIntent = shoppingCartActionIntent
         )
     }
+
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        val repo = FakeImageTextListDataRepository()
+        val items = repo.load()
+
+        provideContent {
+            GlanceTheme {
+                WidgetContent(
+                    items = items,
+                    shoppingCartActionIntent = Intent()
+                )
+            }
+        }
+    }
+
 }
 
 class RecentOrdersWidgetReceiver : GlanceAppWidgetReceiver() {
