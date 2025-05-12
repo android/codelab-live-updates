@@ -17,11 +17,16 @@ package com.example.jetsnack.ui.home.notification
 
 import android.app.Notification
 import android.app.NotificationChannel
+//import android.app.Notification.ProgressStyle
+import android.os.Build
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
+import androidx.compose.ui.graphics.Color
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.IconCompat
 import com.example.jetsnack.R
 
