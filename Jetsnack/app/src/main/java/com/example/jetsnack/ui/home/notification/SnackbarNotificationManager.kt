@@ -23,6 +23,7 @@ import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
 import androidx.compose.ui.graphics.Color
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RequiresApi
@@ -42,19 +43,18 @@ object SnackbarNotificationManager {
         notificationManager = notifManager
         val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, IMPORTANCE_DEFAULT)
         appContext = context
-        notificationManager?.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(channel)
     }
 
     private enum class OrderState(val delay: Long) {
-        INITIALIZING(5000) {
+        INITIALIZING(0) {
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, INITIALIZING)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle("You order is being placed")
                     .setContentText("Confirming with bakery...")
             }
         },
-        FOOD_PREPARATION(9000) {
+        FOOD_PREPARATION(7000) {
             override fun buildNotification(): Notification.Builder {
                 return buildBaseNotification(appContext, FOOD_PREPARATION)
                     .setContentTitle("Your order is being prepared")
@@ -95,8 +95,8 @@ object SnackbarNotificationManager {
         };
 
         fun buildBaseNotification(appContext: Context, orderState: OrderState): Notification.Builder {
-            var notificationBuilder = Notification.Builder(appContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+            val notificationBuilder = Notification.Builder(appContext, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setOngoing(true)
 
             when (orderState) {
