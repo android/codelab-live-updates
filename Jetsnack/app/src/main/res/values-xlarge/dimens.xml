@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Copyright 2025 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  in compliance with the License. You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software distributed under the License
+  is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  or implied. See the License for the specific language governing permissions and limitations under
+  the License.
+  -->
+<resources>
+  <!-- Following are sizes for large tablets. -->
+
+  <!-- Reference:
+  https://developer.android.com/design/ui/mobile/guides/widgets/sizing#tablet
+  -->
+
+  <!-- list of image & texts (sizes to have approximately 2x2 as default drop
+   size and 2x2 as minimum resize and 3x3 as maximum resize size)
+  -->
+  <integer name="sample_text_with_image_list_target_cell_width">2</integer>
+  <integer name="sample_text_with_image_list_target_cell_height">2</integer>
+  <dimen name="sample_text_with_image_list_widget_min_width">180dp</dimen>
+  <dimen name="sample_text_with_image_list_widget_min_height">184dp</dimen>
+  <dimen name="sample_text_with_image_widget_list_min_resize_width">180dp</dimen>
+  <dimen name="sample_text_with_image_list_widget_min_resize_height">184dp</dimen>
+  <dimen name="sample_text_with_image_list_widget_max_resize_width">488dp</dimen>
+  <dimen name="sample_text_with_image_list_widget_max_resize_height">488dp</dimen>
+</resources>
