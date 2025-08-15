@@ -1,7 +1,7 @@
-# Codelab for Live updates
+# Codelab sample for Live updates
 
 This codelab is for the Notifications [Live Updates](https://developer.android.com/develop/ui/views/notifications/live-update) feature.
-Please see the accompanying video [here](https://youtu.be/_Akf_u08p7U?si=Et8exUp1rehVZzQQ)
+Please see the guided codelab [here](https://developer.android.com/devsite/codelabs/notifications-rich-experience-live-updates#1) and the accompanying video [here](https://youtu.be/_Akf_u08p7U?si=Et8exUp1rehVZzQQ)
 
 [Jetsnack][jetsnack] is a sample snack ordering app built with [Jetpack Compose][compose]. In this repository, the app has been extended for the purpose of simulating a checkout and order tracking experience with notifications. The starter_code branch uses standard notifications for the order
 tracking experience and the main branch is the improved user experience that uses the ProgressStyle template and Live Update feature for enhanced visibility. Please see the document [Live Updates][live-updates] for more details on Live Updates.
